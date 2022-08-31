@@ -71,7 +71,7 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   private fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
-    NaverIdLoginSDK.showDevelopersLog(true)
+    NaverIdLoginSDK.showDevelopersLog(false)
     mContext = applicationContext
     methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
     methodChannel?.setMethodCallHandler(this)
@@ -166,14 +166,29 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       result.success(resultProfile)
     } catch (e: InterruptedException) {
       e.printStackTrace()
+      errorResponse(result,"InterruptedException",e.toString())
     } catch (e: ExecutionException) {
       e.printStackTrace()
+      errorResponse(result,"ExecutionException",e.toString())
     } catch (e: JSONException) {
       e.printStackTrace()
+      errorResponse(result,"JSONException",e.toString())
     }
   }
-
+  fun errorResponse(result:Result,status:String,description:String?){
+    var descriptionString=description
+    if(description==null){
+      descriptionString="NULL"
+    }
+    result.success(object : HashMap<String, String>() {
+      init {
+        put("status", "error")
+        put("errorMessage", "errorCode:$status, errorDesc:$descriptionString")
+      }
+    })
+  }
   private fun login(result: Result) {
+    NaverIdLoginSDK.logout()
     val mOAuthLoginHandler = object : OAuthLoginCallback {
       override fun onSuccess() {
         currentAccount(result)
@@ -181,12 +196,7 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       override fun onFailure(httpStatus: Int, message: String) {
         val errorCode = NaverIdLoginSDK.getLastErrorCode().code
         val errorDesc = NaverIdLoginSDK.getLastErrorDescription()
-        result.success(object : HashMap<String, String>() {
-          init {
-            put("status", "error")
-            put("errorMessage", "errorCode:$errorCode, errorDesc:$errorDesc")
-          }
-        })
+        errorResponse(result,errorCode,errorDesc)
       }
       override fun onError(errorCode: Int, message: String) {
         onFailure(errorCode, message)
@@ -220,12 +230,7 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         // 실패했어도 클라이언트 상에 token 정보가 없기 때문에 추가적으로 해줄 수 있는 것은 없음
         val errorCode = NaverIdLoginSDK.getLastErrorCode().code
         val errorDesc = NaverIdLoginSDK.getLastErrorDescription()
-        result.success(object : HashMap<String, String>() {
-          init {
-            put("status", "error")
-            put("errorMessage", "errorCode:$errorCode, errorDesc:$errorDesc")
-          }
-        })
+          errorResponse(result,errorCode,errorDesc)
       }
       override fun onError(errorCode: Int, message: String) {
         onFailure(errorCode, message)
@@ -242,13 +247,8 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       }
       override fun onFailure(httpStatus: Int, message: String) {
         val errorCode = NaverIdLoginSDK.getLastErrorCode().code
-        val errorDescription = NaverIdLoginSDK.getLastErrorDescription()
-        result.success(object : HashMap<String, String>() {
-          init {
-            put("status", "error")
-            put("errorMessage", "errorCode:$errorCode, errorDesc:$errorDescription")
-          }
-        })
+        val errorDesc = NaverIdLoginSDK.getLastErrorDescription()
+          errorResponse(result,errorCode,errorDesc)
       }
       override fun onError(errorCode: Int, message: String) {
         onFailure(errorCode, message)
@@ -291,13 +291,6 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onPostExecute(s: String) {
 
     }
-  }
-
-  @Throws(JSONException::class)
-  fun jsonToMap(t: String): HashMap<String, String> {
-    val jObject = JSONObject(t)
-    var map = jsonObjectToMap(jObject)
-    return map
   }
 
   @Throws(JSONException::class)
