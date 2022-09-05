@@ -80,7 +80,7 @@ class FlutterNaverLogin {
 enum NaverLoginStatus { loggedIn, cancelledByUser, error }
 
 class NaverLoginResult {
-  final NaverLoginStatus status;
+  final String status;
   final NaverAccountResult account;
   final String errorMessage;
   final NaverAccessToken accessToken;
@@ -91,14 +91,14 @@ class NaverLoginResult {
         errorMessage = map['errorMessage'] ?? '',
         account = new NaverAccountResult._(map);
 
-  static NaverLoginStatus _parseStatus(String status) {
+  static String _parseStatus(String status) {
     switch (status) {
       case 'loggedIn':
-        return NaverLoginStatus.loggedIn;
+        return NaverLoginStatus.loggedIn.name;
       case 'cancelledByUser':
-        return NaverLoginStatus.cancelledByUser;
+        return NaverLoginStatus.cancelledByUser.name;
       case 'error':
-        return NaverLoginStatus.error;
+        return NaverLoginStatus.error.name;
     }
     throw new StateError('Invalid status: $status');
   }
