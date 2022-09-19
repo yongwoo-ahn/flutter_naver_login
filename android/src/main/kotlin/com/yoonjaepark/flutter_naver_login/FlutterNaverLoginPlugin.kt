@@ -188,24 +188,26 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     })
   }
 
-  private fun initializeSDK(result: Result){
-    try {
-      e = mContext?.packageName;
-      e?.let {
-        ai = mContext?.packageManager?.getApplicationInfo(it, PackageManager.GET_META_DATA)
+  private fun initializeSDK(result: Result) {
+    e = mContext?.packageName;
+    e?.let {
+      ai = mContext?.packageManager?.getApplicationInfo(it, PackageManager.GET_META_DATA)
 
-        bundle = ai?.metaData;
+      bundle = ai?.metaData;
 
-        if(bundle != null) {
-          OAUTH_CLIENT_ID = bundle?.getString("com.naver.sdk.clientId").toString();
-          OAUTH_CLIENT_SECRET = bundle?.getString("com.naver.sdk.clientSecret").toString();
-          OAUTH_CLIENT_NAME = bundle?.getString("com.naver.sdk.clientName").toString();
-          NaverIdLoginSDK.initialize(mContext!!, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME);
-        }
+      if (bundle != null) {
+        OAUTH_CLIENT_ID = bundle?.getString("com.naver.sdk.clientId").toString();
+        OAUTH_CLIENT_SECRET = bundle?.getString("com.naver.sdk.clientSecret").toString();
+        OAUTH_CLIENT_NAME = bundle?.getString("com.naver.sdk.clientName").toString();
+        NaverIdLoginSDK.initialize(
+          mContext!!,
+          OAUTH_CLIENT_ID,
+          OAUTH_CLIENT_SECRET,
+          OAUTH_CLIENT_NAME
+        );
       }
-    } catch (e: Exception) {
-      e.printStackTrace()
     }
+    result.success(null)
   }
   private fun login(result: Result) {
     val mOAuthLoginHandler = object : OAuthLoginCallback {
