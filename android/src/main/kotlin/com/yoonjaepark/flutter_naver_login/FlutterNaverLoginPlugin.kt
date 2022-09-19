@@ -47,7 +47,7 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private var OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID"
   private var OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET"
   private var OAUTH_CLIENT_NAME = "OAUTH_CLIENT_NAME"
-  private var registrar: Registrar? = null
+  public var registrar: Registrar? = null
 
   private var currentActivity: Activity? = null
   private var mContext: Context? = null
@@ -70,7 +70,7 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     onAttachedToEngine(flutterPluginBinding.getApplicationContext(), flutterPluginBinding.getBinaryMessenger());
   }
 
-  private fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
+  public fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
     NaverIdLoginSDK.showDevelopersLog(false)
     mContext = applicationContext
     methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
