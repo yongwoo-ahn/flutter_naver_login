@@ -17,6 +17,11 @@ class FlutterNaverLogin {
     'tokenType': 'no token',
   };
 
+  static Future<void> initializeSDK() async {
+    await _channel.invokeMethod('initializeSDK');
+    return;
+  }
+
   static Future<NaverLoginResult> logIn() async {
     final Map<dynamic, dynamic> res = await _channel.invokeMethod('logIn');
 
@@ -57,7 +62,8 @@ class FlutterNaverLogin {
     if (accessToken == null)
       return NaverAccessToken._(FlutterNaverLogin.accessResultError);
     else
-      return new NaverAccessToken._(FlutterNaverLogin.castStringMap(accessToken));
+      return new NaverAccessToken._(
+          FlutterNaverLogin.castStringMap(accessToken));
   }
 
   static Future<NaverAccessToken> refreshAccessTokenWithRefreshToken() async {
@@ -68,10 +74,11 @@ class FlutterNaverLogin {
     }
     return (await currentAccessToken);
   }
-  static Map<String,dynamic> castStringMap(Map<dynamic, dynamic> map){
+
+  static Map<String, dynamic> castStringMap(Map<dynamic, dynamic> map) {
     try {
       return map.cast<String, dynamic>();
-    }catch(e){
+    } catch (e) {
       return FlutterNaverLogin.accessResultError;
     }
   }
