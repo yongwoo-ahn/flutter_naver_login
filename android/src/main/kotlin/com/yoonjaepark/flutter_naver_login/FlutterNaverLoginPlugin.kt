@@ -72,7 +72,6 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   private fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
     NaverIdLoginSDK.showDevelopersLog(false)
-    NaverIdLoginSDK.
     mContext = applicationContext
     methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
     methodChannel?.setMethodCallHandler(this)
