@@ -125,9 +125,9 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         } else if (call.method == METHOD_LOG_OUT_DELETE_TOKEN) {
             this.logoutAndDeleteToken(result)
         } else if (call.method == METHOD_INITIALIZE_SDK) {
-            val clientId = call.argument("clientId");
-            val clientSecret = call.argument("clientSecret");
-            val clientName = call.argument("clientName");
+            val clientId = call.argument<String>("clientId");
+            val clientSecret = call.argument<String>("clientSecret");
+            val clientName = call.argument<String>("clientName");
             this.initializeSDK(result, clientId, clientSecret, clientName)
         } else if (call.method == METHOD_GET_TOKEN) {
             result.success(object : HashMap<String, String>() {
