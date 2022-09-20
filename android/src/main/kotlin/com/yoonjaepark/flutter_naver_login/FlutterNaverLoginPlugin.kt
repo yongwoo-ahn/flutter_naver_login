@@ -45,7 +45,8 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
-    private lateinit var activityPluginBinding: ActivityPluginBinding;
+
+    private var activityPluginBinding: ActivityPluginBinding? = null;
 
     companion object {
         @JvmStatic
@@ -201,7 +202,11 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler)
+        if (activityPluginBinding == null) {
+            errorResponse(result, "", "");
+            return;
+        }
+        NaverIdLoginSDK.authenticate(activityPluginBinding!!.getActivity(), mOAuthLoginHandler)
     }
 
     fun logout(result: Result) {
@@ -238,7 +243,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             }
         }
 
-        NidOAuthLogin().callDeleteTokenApi(activityPluginBinding.getActivity(), mOAuthLoginHandler)
+        NidOAuthLogin().callDeleteTokenApi(activityPluginBinding!!.getActivity(), mOAuthLoginHandler)
     }
 
     fun refreshAccessTokenWithRefreshToken(result: Result) {
@@ -258,7 +263,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             }
         }
         NidOAuthLogin().callRefreshAccessTokenApi(
-            activityPluginBinding.getActivity(),
+            activityPluginBinding!!.getActivity(),
             mOAuthLoginHnadler
         )
     }
