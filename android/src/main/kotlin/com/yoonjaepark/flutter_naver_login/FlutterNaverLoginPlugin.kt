@@ -43,7 +43,6 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     private var OAUTH_CLIENT_ID = "OAUTH_CLIENT_ID"
     private var OAUTH_CLIENT_SECRET = "OAUTH_CLIENT_SECRET"
     private var OAUTH_CLIENT_NAME = "OAUTH_CLIENT_NAME"
-    public var registrar: Registrar? = null
 
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
@@ -67,7 +66,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         initSDK(context);
     }
 
-    public fun initSDK(applicationContext: Context) {
+    private fun initSDK(applicationContext: Context) {
         var packageName = applicationContext.packageName
         packageName.let {
             var applicationInfo =
@@ -208,7 +207,11 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler);
+        if (::activityPluginBinding.isInitialized) {
+            NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler);
+        } else {
+
+        }
     }
 
     fun logout(result: Result) {
