@@ -23,11 +23,6 @@ abstract class FlutterNaverLoginPlatform extends PlatformInterface {
     PlatformInterface.verifyToken(instance, _token);
     _instance = instance;
   }
-
-  Future<void> initializeSDK(Map<String,dynamic> map) async {
-    throw UnimplementedError('initializeSDK() has not been implemented.');
-  }
-
   Future<NaverLoginResult> logIn() async {
     throw UnimplementedError('logIn() has not been implemented.');
   }

@@ -62,7 +62,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         )
         channel.setMethodCallHandler(this);
         this.context = flutterPluginBinding.applicationContext
-//        initSDK(this.context)
+        initSDK(this.context)
     }
 
     private fun initSDK(applicationContext: Context) {
@@ -124,11 +124,6 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             this.logout(result)
         } else if (call.method == METHOD_LOG_OUT_DELETE_TOKEN) {
             this.logoutAndDeleteToken(result)
-        } else if (call.method == METHOD_INITIALIZE_SDK) {
-            val clientId = call.argument<String>("clientId");
-            val clientSecret = call.argument<String>("clientSecret");
-            val clientName = call.argument<String>("clientName");
-            this.initializeSDK(result, clientId, clientSecret, clientName)
         } else if (call.method == METHOD_GET_TOKEN) {
             result.success(object : HashMap<String, String>() {
                 init {
@@ -188,21 +183,6 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 put("errorMessage", "errorCode:$status, errorDesc:$descriptionString")
             }
         })
-    }
-
-    private fun initializeSDK(
-        result: Result,
-        clientId: String?,
-        clientSecret: String?,
-        clientName: String?
-    ) {
-        NaverIdLoginSDK.initialize(
-            this.context,
-            clientId!!,
-            clientSecret!!,
-            clientName!!
-        )
-        result.success(true)
     }
 
     private fun login(result: Result) {

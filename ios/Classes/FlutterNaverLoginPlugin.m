@@ -66,9 +66,7 @@
         _naverResult(info);
     } else if ([@"refreshAccessTokenWithRefreshToken" isEqualToString:call.method]) {
         [_thirdPartyLoginConn requestAccessTokenWithRefreshToken];
-    } else if([@"initializeSDK" isEqualToString:call.method]) {
-
-    } else {
+    }  else {
         result(FlutterMethodNotImplemented);
     }
 }
