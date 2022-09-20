@@ -47,7 +47,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
-    private lateinit var currentActivity: Activity
+    private var currentActivity: Activity?=null
 
     companion object {
         @JvmStatic
