@@ -50,12 +50,6 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   public var registrar: Registrar? = null
 
   private var currentActivity: Activity? = null
-  private var mContext: Context? = null
-  private var methodChannel: MethodChannel? = null
-
-  private var ai: ApplicationInfo? = null
-  private var e: String? = null
-  private var bundle: Bundle? = null
 
   companion object {
     @JvmStatic
@@ -72,15 +66,15 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   public fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
     NaverIdLoginSDK.showDevelopersLog(false)
-    mContext = applicationContext
-    methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
+    var mContext = applicationContext
+    var methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
     methodChannel.setMethodCallHandler(this)
     try {
-      e = mContext.packageName;
-      e.let {
-        ai = mContext.packageManager.getApplicationInfo(it, PackageManager.GET_META_DATA)
+      var packageName = mContext.packageName;
+      packageName.let {
+        var applicationInfo = mContext.packageManager.getApplicationInfo(it, PackageManager.GET_META_DATA)
 
-        bundle = ai.metaData;
+        var bundle = applicationInfo.metaData;
 
         if(bundle != null) {
           OAUTH_CLIENT_ID = bundle.getString("com.naver.sdk.clientId").toString();
@@ -189,24 +183,6 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   private fun initializeSDK(result: Result) {
-    e = mContext?.packageName;
-    e?.let {
-      ai = mContext?.packageManager?.getApplicationInfo(it, PackageManager.GET_META_DATA)
-
-      bundle = ai?.metaData;
-
-      if (bundle != null) {
-        OAUTH_CLIENT_ID = bundle?.getString("com.naver.sdk.clientId").toString();
-        OAUTH_CLIENT_SECRET = bundle?.getString("com.naver.sdk.clientSecret").toString();
-        OAUTH_CLIENT_NAME = bundle?.getString("com.naver.sdk.clientName").toString();
-        NaverIdLoginSDK.initialize(
-          mContext!!,
-          OAUTH_CLIENT_ID,
-          OAUTH_CLIENT_SECRET,
-          OAUTH_CLIENT_NAME
-        );
-      }
-    }
     result.success(null)
   }
   private fun login(result: Result) {
