@@ -65,7 +65,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     private fun initSDK(applicationContext: Context) {
-        if(::applicationContext.isInitialized) {
+        if(pplicationContext.isInitialized) {
             if (NaverIdLoginSDK.getState() != NidOAuthLoginState.NEED_INIT) {
                 var packageName = applicationContext.packageName
                 packageName.let {
@@ -102,7 +102,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        initSDK(binding.getActivity().getApplicationContext())
+        initSDK(binding.getActivity())
         this.activityPluginBinding = binding
     }
 
