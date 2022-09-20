@@ -192,15 +192,15 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
     private fun initializeSDK(
         result: Result,
-        clientId: String,
-        clientSecret: String,
-        clientName: String
+        clientId: String?,
+        clientSecret: String?,
+        clientName: String?
     ) {
         NaverIdLoginSDK.initialize(
             this.context,
-            clientId,
-            clientSecret,
-            clientName
+            clientId!!,
+            clientSecret!!,
+            clientName!!
         )
         result.success(true)
     }
