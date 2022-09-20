@@ -1,11 +1,18 @@
 import 'dart:async';
+import 'dart:core';
 
 import 'flutter_naver_login_platform_interface.dart';
 import 'model/naver.dart';
 
 class FlutterNaverLogin {
-  Future<void> initializeSDK() async {
-    return FlutterNaverLoginPlatform.instance.initializeSDK();
+  Future<void> initializeSDK(String clientId, String clientSecret,
+      String clientName) async {
+    Map<String, dynamic> map = {
+      "clientId": clientId,
+      "clientSecret": clientSecret,
+      "clientName": clientName
+    };
+    return FlutterNaverLoginPlatform.instance.initializeSDK(map);
   }
 
   Future<NaverLoginResult> logIn() async {
@@ -33,6 +40,7 @@ class FlutterNaverLogin {
   }
 
   Future<NaverAccessToken> refreshAccessTokenWithRefreshToken() async {
-    return FlutterNaverLoginPlatform.instance.refreshAccessTokenWithRefreshToken();
+    return FlutterNaverLoginPlatform.instance
+        .refreshAccessTokenWithRefreshToken();
   }
 }

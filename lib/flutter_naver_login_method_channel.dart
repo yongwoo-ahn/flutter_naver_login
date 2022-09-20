@@ -11,8 +11,8 @@ class MethodChannelFlutterNaverLogin extends FlutterNaverLoginPlatform {
   final methodChannel = const MethodChannel('flutter_naver_login');
 
   @override
-  Future<void> initializeSDK() async {
-    await methodChannel.invokeMethod('initializeSDK');
+  Future<void> initializeSDK(Map<String,dynamic> map) async {
+    await methodChannel.invokeMethod('initializeSDK',map);
     return;
   }
   @override
