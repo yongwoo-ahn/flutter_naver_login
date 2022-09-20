@@ -209,7 +209,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        NaverIdLoginSDK.authenticate(currentActivity, mOAuthLoginHandler);
+        NaverIdLoginSDK.authenticate(currentActivity!!, mOAuthLoginHandler);
     }
 
     fun logout(result: Result) {
@@ -246,7 +246,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             }
         }
 
-        NidOAuthLogin().callDeleteTokenApi(currentActivity, mOAuthLoginHandler)
+        NidOAuthLogin().callDeleteTokenApi(currentActivity!!, mOAuthLoginHandler)
     }
 
     fun refreshAccessTokenWithRefreshToken(result: Result) {
@@ -265,7 +265,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        NidOAuthLogin().callRefreshAccessTokenApi(currentActivity, mOAuthLoginHnadler)
+        NidOAuthLogin().callRefreshAccessTokenApi(currentActivity!!, mOAuthLoginHnadler)
     }
 
     internal inner class ProfileTask : AsyncTask<String, Void, String>() {
