@@ -47,7 +47,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
-    private var currentActivity: Activity?=null
+//    private var currentActivity: Activity?=null
 
     companion object {
         @JvmStatic
@@ -101,7 +101,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        currentActivity = binding.activity
+//        currentActivity = binding.activity
     }
     override fun onDetachedFromActivityForConfigChanges() {}
 
@@ -209,7 +209,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        NaverIdLoginSDK.authenticate(currentActivity!!, mOAuthLoginHandler);
+        NaverIdLoginSDK.authenticate(context, mOAuthLoginHandler);
     }
 
     fun logout(result: Result) {
@@ -246,7 +246,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             }
         }
 
-        NidOAuthLogin().callDeleteTokenApi(currentActivity!!, mOAuthLoginHandler)
+        NidOAuthLogin().callDeleteTokenApi(context, mOAuthLoginHandler)
     }
 
     fun refreshAccessTokenWithRefreshToken(result: Result) {
@@ -265,7 +265,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        NidOAuthLogin().callRefreshAccessTokenApi(currentActivity!!, mOAuthLoginHnadler)
+        NidOAuthLogin().callRefreshAccessTokenApi(context, mOAuthLoginHnadler)
     }
 
     internal inner class ProfileTask : AsyncTask<String, Void, String>() {
