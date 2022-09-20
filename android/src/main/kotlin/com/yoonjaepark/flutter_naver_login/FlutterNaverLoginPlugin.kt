@@ -157,7 +157,6 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     fun currentAccount(result: Result) {
-        Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_ID, Toast.LENGTH_SHORT).show()
         val accessToken = NaverIdLoginSDK.getAccessToken()
 
         val task = ProfileTask()
