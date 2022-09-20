@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.AsyncTask
-import android.util.Log
 import androidx.annotation.NonNull
 import com.navercorp.nid.NaverIdLoginSDK
 import com.navercorp.nid.oauth.NidOAuthLogin
@@ -12,7 +11,6 @@ import com.navercorp.nid.oauth.OAuthLoginCallback
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -25,7 +23,7 @@ import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.concurrent.ExecutionException
-import android.widget.Toast
+
 /** FlutterNaverLoginPlugin */
 class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
     /** Plugin registration.  */
@@ -47,7 +45,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     private var OAUTH_CLIENT_NAME = "OAUTH_CLIENT_NAME"
     public var registrar: Registrar? = null
 
-    private lateinit var channel : MethodChannel
+    private lateinit var channel: MethodChannel
     private lateinit var context: Context
     private lateinit var currentActivity: Activity
 
@@ -60,16 +58,23 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "flutter_naver_login")
+        channel = MethodChannel(
+            flutterPluginBinding.getFlutterEngine().getDartExecutor(),
+            "flutter_naver_login"
+        )
         channel.setMethodCallHandler(this);
         context = flutterPluginBinding.applicationContext
         initSDK(context);
     }
-    public fun initSDK(applicationContext:Context){
+
+    public fun initSDK(applicationContext: Context) {
         var packageName = applicationContext.packageName
         packageName.let {
             var applicationInfo =
-                applicationContext.packageManager.getApplicationInfo(it, PackageManager.GET_META_DATA)
+                applicationContext.packageManager.getApplicationInfo(
+                    it,
+                    PackageManager.GET_META_DATA
+                )
 
             var bundle = applicationInfo.metaData
 
@@ -92,11 +97,11 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-
+        onAttachedToActivity(binding)
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        setActivity(binding.activity)
+        currentActivity = activity
     }
 
     override fun onDetachedFromActivityForConfigChanges() {}
@@ -116,15 +121,15 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     // in the same class.
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        if (call.method==METHOD_LOG_IN) {
+        if (call.method == METHOD_LOG_IN) {
             this.login(result)
-        }else if(call.method==METHOD_LOG_OUT) {
+        } else if (call.method == METHOD_LOG_OUT) {
             this.logout(result)
-        }else if(call.method==METHOD_LOG_OUT_DELETE_TOKEN) {
+        } else if (call.method == METHOD_LOG_OUT_DELETE_TOKEN) {
             this.logoutAndDeleteToken(result)
-        }else if(call.method==METHOD_INITIALIZE_SDK) {
+        } else if (call.method == METHOD_INITIALIZE_SDK) {
             this.initializeSDK(result)
-        }else if(call.method==METHOD_GET_TOKEN) {
+        } else if (call.method == METHOD_GET_TOKEN) {
             result.success(object : HashMap<String, String>() {
                 init {
                     put("status", "getToken")
@@ -134,28 +139,24 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                     NaverIdLoginSDK.getTokenType()?.let { put("tokenType", it) }
                 }
             })
-        }else if(call.method==METHOD_GET_ACCOUNT) {
+        } else if (call.method == METHOD_GET_ACCOUNT) {
             this.currentAccount(result)
-        }else if(call.method==METHOD_REFRESH_ACCESS_TOKEN_WITH_REFRESH_TOKEN) {
+        } else if (call.method == METHOD_REFRESH_ACCESS_TOKEN_WITH_REFRESH_TOKEN) {
             this.refreshAccessTokenWithRefreshToken(
                 result
             )
-        }else {
+        } else {
             result.notImplemented()
         }
     }
 
-    private fun setActivity(activity: Activity) {
-        currentActivity = activity
-    }
-
     fun currentAccount(result: Result) {
         val accessToken = NaverIdLoginSDK.getAccessToken()
-        if(accessToken == null){
+        if (accessToken == null) {
             val errorCode = NaverIdLoginSDK.getLastErrorCode().code
             val errorDesc = NaverIdLoginSDK.getLastErrorDescription()
             errorResponse(result, errorCode, errorDesc)
-        }else {
+        } else {
             val task = ProfileTask()
             try {
                 val res = task.execute(accessToken).get()
