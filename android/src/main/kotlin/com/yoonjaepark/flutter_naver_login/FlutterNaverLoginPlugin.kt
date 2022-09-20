@@ -50,7 +50,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "flutter_plugin_name")
+            val channel = MethodChannel(registrar.messenger(), "flutter_naver_login")
             channel.setMethodCallHandler(FlutterNaverLoginPlugin())
         }
     }
@@ -61,9 +61,9 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             "flutter_naver_login"
         )
         channel.setMethodCallHandler(this);
-        context = flutterPluginBinding.applicationContext
+        this.context = flutterPluginBinding.applicationContext
 
-        initSDK(context);
+        initSDK(this.context);
     }
 
     private fun initSDK(applicationContext: Context) {
@@ -207,11 +207,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        if (::activityPluginBinding.isInitialized) {
-            NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler);
-        } else {
-
-        }
+        NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler);
     }
 
     fun logout(result: Result) {
