@@ -65,22 +65,23 @@ class FlutterNaverLoginPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
   public fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
-    NaverIdLoginSDK.showDevelopersLog(false)
     var mContext = applicationContext
     var methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
     methodChannel.setMethodCallHandler(this)
     try {
-      var packageName = mContext.packageName;
+      var packageName = mContext.packageName
+      Log.w("test log", packageName)
       packageName.let {
         var applicationInfo = mContext.packageManager.getApplicationInfo(it, PackageManager.GET_META_DATA)
 
-        var bundle = applicationInfo.metaData;
+        var bundle = applicationInfo.metaData
 
         if(bundle != null) {
-          OAUTH_CLIENT_ID = bundle.getString("com.naver.sdk.clientId").toString();
-          OAUTH_CLIENT_SECRET = bundle.getString("com.naver.sdk.clientSecret").toString();
-          OAUTH_CLIENT_NAME = bundle.getString("com.naver.sdk.clientName").toString();
-          NaverIdLoginSDK.initialize(mContext!!, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME);
+          OAUTH_CLIENT_ID = bundle.getString("com.naver.sdk.clientId").toString()
+          OAUTH_CLIENT_SECRET = bundle.getString("com.naver.sdk.clientSecret").toString()
+          OAUTH_CLIENT_NAME = bundle.getString("com.naver.sdk.clientName").toString()
+          NaverIdLoginSDK.initialize(mContext!!, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME)
+          NaverIdLoginSDK.showDevelopersLog(true)
         }
       }
     } catch (e: Exception) {
