@@ -115,27 +115,32 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     // in the same class.
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
-        when (call.method) {
-            METHOD_LOG_IN -> this.login(result)
-            METHOD_LOG_OUT -> this.logout(result)
-            METHOD_LOG_OUT_DELETE_TOKEN -> this.logoutAndDeleteToken(result)
-            METHOD_INITIALIZE_SDK -> this.initializeSDK(result)
-            METHOD_GET_TOKEN -> {
-                result.success(object : HashMap<String, String>() {
-                    init {
-                        put("status", "getToken")
-                        NaverIdLoginSDK.getAccessToken()?.let { put("accessToken", it) }
-                        NaverIdLoginSDK.getRefreshToken()?.let { put("refreshToken", it) }
-                        put("expiresAt", NaverIdLoginSDK.getExpiresAt().toString())
-                        NaverIdLoginSDK.getTokenType()?.let { put("tokenType", it) }
-                    }
-                })
-            }
-            METHOD_GET_ACCOUNT -> this.currentAccount(result)
-            METHOD_REFRESH_ACCESS_TOKEN_WITH_REFRESH_TOKEN -> this.refreshAccessTokenWithRefreshToken(
+        if (call.method==METHOD_LOG_IN) {
+            this.login(result)
+        }else if(call.method==METHOD_LOG_OUT) {
+            this.logout(result)
+        }else if(call.method==METHOD_LOG_OUT_DELETE_TOKEN) {
+            this.logoutAndDeleteToken(result)
+        }else if(call.method==METHOD_INITIALIZE_SDK) {
+            this.initializeSDK(result)
+        }else if(call.method==METHOD_GET_TOKEN) {
+            result.success(object : HashMap<String, String>() {
+                init {
+                    put("status", "getToken")
+                    NaverIdLoginSDK.getAccessToken()?.let { put("accessToken", it) }
+                    NaverIdLoginSDK.getRefreshToken()?.let { put("refreshToken", it) }
+                    put("expiresAt", NaverIdLoginSDK.getExpiresAt().toString())
+                    NaverIdLoginSDK.getTokenType()?.let { put("tokenType", it) }
+                }
+            })
+        }else if(call.method==METHOD_GET_ACCOUNT) {
+            this.currentAccount(result)
+        }else if(call.method==METHOD_REFRESH_ACCESS_TOKEN_WITH_REFRESH_TOKEN) {
+            this.refreshAccessTokenWithRefreshToken(
                 result
             )
-            else -> result.notImplemented()
+        }else {
+            result.notImplemented()
         }
     }
 
