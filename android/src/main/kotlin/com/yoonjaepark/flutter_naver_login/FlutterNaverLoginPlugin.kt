@@ -47,23 +47,23 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     private var OAUTH_CLIENT_NAME = "OAUTH_CLIENT_NAME"
     public var registrar: Registrar? = null
 
-    private var currentActivity: Activity? = null
+    private lateinit var channel : MethodChannel
+    private lateinit var context: Context
+    private lateinit var currentActivity: Activity
 
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
-            val instance = FlutterNaverLoginPlugin()
-            instance.registrar = registrar
-            instance.initSDK(registrar.context())
-            instance.onAttachedToEngine(registrar.context(), registrar.messenger())
+            val channel = MethodChannel(registrar.messenger(), "flutter_plugin_name")
+            channel.setMethodCallHandler(FlutterNaverLoginPlugin())
         }
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        onAttachedToEngine(
-            flutterPluginBinding.getApplicationContext(),
-            flutterPluginBinding.getBinaryMessenger()
-        );
+        channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "flutter_naver_login")
+        channel.setMethodCallHandler(this);
+        context = flutterPluginBinding.applicationContext
+        initSDK(context);
     }
     public fun initSDK(applicationContext:Context){
         var packageName = applicationContext.packageName
@@ -87,20 +87,16 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             }
         }
     }
-    public fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
-        var methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
-        methodChannel.setMethodCallHandler(this)
-    }
 
     override fun onDetachedFromActivity() {
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-        setActivity(binding.getActivity());
+        setActivity(binding.activity)
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        setActivity(binding.getActivity())
+        setActivity(binding.activity)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
