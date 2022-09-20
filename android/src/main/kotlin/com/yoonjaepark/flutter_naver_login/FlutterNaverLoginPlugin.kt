@@ -57,7 +57,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-
+        this.flutterPluginBinding=flutterPluginBinding;
     }
 
     private fun initSDK(applicationContext: Context) {
