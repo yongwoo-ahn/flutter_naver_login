@@ -99,7 +99,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         setActivity(binding.activity)
     }
 
-    override fun onDetachedFromActivityForConfigChanges() {
+    override fun onDetachedFromActivityForConfigChanges() {}
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     }
