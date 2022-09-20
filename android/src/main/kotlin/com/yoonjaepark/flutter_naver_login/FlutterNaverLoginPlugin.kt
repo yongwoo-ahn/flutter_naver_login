@@ -70,8 +70,6 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         var methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
         methodChannel.setMethodCallHandler(this)
         var packageName = mContext.packageName
-        Toast.makeText(mContext.applicationContext, packageName, Toast.LENGTH_SHORT).show()
-        Log.w("test log", packageName)
         packageName.let {
             var applicationInfo =
                 mContext.packageManager.getApplicationInfo(it, PackageManager.GET_META_DATA)
@@ -80,8 +78,11 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
             if (bundle != null) {
                 OAUTH_CLIENT_ID = bundle.getString("com.naver.sdk.clientId").toString()
+                Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_ID, Toast.LENGTH_SHORT).show()
                 OAUTH_CLIENT_SECRET = bundle.getString("com.naver.sdk.clientSecret").toString()
+                Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_SECRET, Toast.LENGTH_SHORT).show()
                 OAUTH_CLIENT_NAME = bundle.getString("com.naver.sdk.clientName").toString()
+                Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_SECRET, Toast.LENGTH_SHORT).show()
                 NaverIdLoginSDK.initialize(
                     mContext,
                     OAUTH_CLIENT_ID,
@@ -156,6 +157,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     fun currentAccount(result: Result) {
+        Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_ID, Toast.LENGTH_SHORT).show()
         val accessToken = NaverIdLoginSDK.getAccessToken()
 
         val task = ProfileTask()
