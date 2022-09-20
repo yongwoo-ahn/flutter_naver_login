@@ -61,7 +61,6 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             flutterPluginBinding.getFlutterEngine().getDartExecutor(),
             "flutter_naver_login"
         )
-        channel.setMethodCallHandler(this);
         this.context = flutterPluginBinding.applicationContext
         initSDK(this.context)
     }
@@ -100,6 +99,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
         this.activityPluginBinding = binding
+        this.channel.setMethodCallHandler(this)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {}
