@@ -46,8 +46,8 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     private lateinit var channel: MethodChannel
     private lateinit var context: Context
 
-    private var activityPluginBinding: ActivityPluginBinding? = null;
-
+    private var activityPluginBinding: ActivityPluginBinding? = null
+    private lateinit var flutterPluginBinding:FlutterPlugin.FlutterPluginBinding
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
@@ -57,12 +57,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        channel = MethodChannel(
-            flutterPluginBinding.getFlutterEngine().getDartExecutor(),
-            "flutter_naver_login"
-        )
-        this.context = flutterPluginBinding.applicationContext
-        initSDK(this.context)
+
     }
 
     private fun initSDK(applicationContext: Context) {
@@ -98,6 +93,12 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        channel = MethodChannel(
+            flutterPluginBinding.getFlutterEngine().getDartExecutor(),
+            "flutter_naver_login"
+        )
+        this.context = flutterPluginBinding.applicationContext
+        initSDK(this.context)
         this.activityPluginBinding = binding
         this.channel.setMethodCallHandler(this)
     }
