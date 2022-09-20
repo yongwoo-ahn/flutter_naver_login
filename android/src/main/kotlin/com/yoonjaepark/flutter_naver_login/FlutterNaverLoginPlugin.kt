@@ -101,7 +101,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        currentActivity = activity
+        currentActivity = binding.activity
     }
 
     override fun onDetachedFromActivityForConfigChanges() {}
