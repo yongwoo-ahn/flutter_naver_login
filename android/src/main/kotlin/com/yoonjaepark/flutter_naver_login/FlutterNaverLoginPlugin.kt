@@ -54,6 +54,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         fun registerWith(registrar: Registrar) {
             val instance = FlutterNaverLoginPlugin()
             instance.registrar = registrar
+            instance.initSDK(registrar.context())
             instance.onAttachedToEngine(registrar.context(), registrar.messenger())
         }
     }
@@ -64,15 +65,11 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
             flutterPluginBinding.getBinaryMessenger()
         );
     }
-
-    public fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
-        var mContext = applicationContext
-        var methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
-        methodChannel.setMethodCallHandler(this)
-        var packageName = mContext.packageName
+    public fun initSDK(applicationContext:Context){
+        var packageName = applicationContext.packageName
         packageName.let {
             var applicationInfo =
-                mContext.packageManager.getApplicationInfo(it, PackageManager.GET_META_DATA)
+                applicationContext.packageManager.getApplicationInfo(it, PackageManager.GET_META_DATA)
 
             var bundle = applicationInfo.metaData
 
@@ -81,7 +78,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 OAUTH_CLIENT_SECRET = bundle.getString("com.naver.sdk.clientSecret").toString()
                 OAUTH_CLIENT_NAME = bundle.getString("com.naver.sdk.clientName").toString()
                 NaverIdLoginSDK.initialize(
-                    mContext,
+                    applicationContext,
                     OAUTH_CLIENT_ID,
                     OAUTH_CLIENT_SECRET,
                     OAUTH_CLIENT_NAME
@@ -89,6 +86,10 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 NaverIdLoginSDK.showDevelopersLog(true)
             }
         }
+    }
+    public fun onAttachedToEngine(applicationContext: Context, binaryMessenger: BinaryMessenger) {
+        var methodChannel = MethodChannel(binaryMessenger, "flutter_naver_login")
+        methodChannel.setMethodCallHandler(this)
     }
 
     override fun onDetachedFromActivity() {
