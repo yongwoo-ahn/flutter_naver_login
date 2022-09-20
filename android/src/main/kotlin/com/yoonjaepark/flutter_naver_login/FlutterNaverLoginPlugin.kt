@@ -78,11 +78,8 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
             if (bundle != null) {
                 OAUTH_CLIENT_ID = bundle.getString("com.naver.sdk.clientId").toString()
-                Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_ID, Toast.LENGTH_SHORT).show()
                 OAUTH_CLIENT_SECRET = bundle.getString("com.naver.sdk.clientSecret").toString()
-                Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_SECRET, Toast.LENGTH_SHORT).show()
                 OAUTH_CLIENT_NAME = bundle.getString("com.naver.sdk.clientName").toString()
-                Toast.makeText(mContext.applicationContext, OAUTH_CLIENT_SECRET, Toast.LENGTH_SHORT).show()
                 NaverIdLoginSDK.initialize(
                     mContext,
                     OAUTH_CLIENT_ID,
@@ -158,23 +155,28 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
 
     fun currentAccount(result: Result) {
         val accessToken = NaverIdLoginSDK.getAccessToken()
-
-        val task = ProfileTask()
-        try {
-            val res = task.execute(accessToken).get()
-            val obj = JSONObject(res)
-            var resultProfile = jsonObjectToMap(obj.getJSONObject("response"))
-            resultProfile["status"] = "loggedIn"
-            result.success(resultProfile)
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-            errorResponse(result, "InterruptedException", e.toString())
-        } catch (e: ExecutionException) {
-            e.printStackTrace()
-            errorResponse(result, "ExecutionException", e.toString())
-        } catch (e: JSONException) {
-            e.printStackTrace()
-            errorResponse(result, "JSONException", e.toString())
+        if(accessToken == null){
+            val errorCode = NaverIdLoginSDK.getLastErrorCode().code
+            val errorDesc = NaverIdLoginSDK.getLastErrorDescription()
+            errorResponse(result, errorCode, errorDesc)
+        }else {
+            val task = ProfileTask()
+            try {
+                val res = task.execute(accessToken).get()
+                val obj = JSONObject(res)
+                var resultProfile = jsonObjectToMap(obj.getJSONObject("response"))
+                resultProfile["status"] = "loggedIn"
+                result.success(resultProfile)
+            } catch (e: InterruptedException) {
+                e.printStackTrace()
+                errorResponse(result, "InterruptedException", e.toString())
+            } catch (e: ExecutionException) {
+                e.printStackTrace()
+                errorResponse(result, "ExecutionException", e.toString())
+            } catch (e: JSONException) {
+                e.printStackTrace()
+                errorResponse(result, "JSONException", e.toString())
+            }
         }
     }
 
