@@ -63,6 +63,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         )
         channel.setMethodCallHandler(this);
         this.context = flutterPluginBinding.applicationContext
+        initSDK(this.context)
     }
 
     private fun initSDK(applicationContext: Context) {
@@ -206,12 +207,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
                 onFailure(errorCode, message)
             }
         }
-        if(NaverIdLoginSDK.getState()== NidOAuthLoginState.NEED_INIT) {
-            initSDK(this.context)
-            NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler)
-        }else{
-            NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler)
-        }
+        NaverIdLoginSDK.authenticate(activityPluginBinding.getActivity(), mOAuthLoginHandler)
     }
 
     fun logout(result: Result) {
