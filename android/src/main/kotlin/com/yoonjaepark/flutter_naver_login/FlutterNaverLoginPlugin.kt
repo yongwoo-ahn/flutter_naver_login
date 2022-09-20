@@ -99,12 +99,12 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
-        activityPluginBinding = binding
+        this.activityPluginBinding = binding
     }
     override fun onDetachedFromActivityForConfigChanges() {}
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-        channel.setMethodCallHandler(null)
+        this.channel.setMethodCallHandler(null)
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
