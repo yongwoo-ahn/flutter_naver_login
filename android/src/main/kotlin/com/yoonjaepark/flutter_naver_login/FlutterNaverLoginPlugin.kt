@@ -100,7 +100,6 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
-        setActivity(null);
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
@@ -146,7 +145,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin, MethodCallHandler, ActivityAware 
         return if (registrar != null) registrar!!.activity() else currentActivity
     }
 
-    private fun setActivity(activity: Activity?) {
+    private fun setActivity(activity: Activity) {
         currentActivity = activity
     }
 
