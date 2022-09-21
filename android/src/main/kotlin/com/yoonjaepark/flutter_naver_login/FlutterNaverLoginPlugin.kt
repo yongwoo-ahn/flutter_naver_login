@@ -41,7 +41,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin,ActivityAware {
             flutterPluginBinding.getFlutterEngine().getDartExecutor(),
             "flutter_naver_login"
         )
-        this.methodCallHandler = NaverMethodCallHandler(flutterPluginBinding.applicationContext)
+        this.methodCallHandler = NaverMethodCallHandler(flutterPluginBinding.getApplicationContext())
         this.channel.setMethodCallHandler(methodCallHandler)
     }
 
@@ -102,6 +102,7 @@ class NaverMethodCallHandler : MethodCallHandler {
     }
 
     constructor(context: Context) {
+        this.mContext=context;
 //        initSDK(context)
     }
     fun setContext(context: Context){
