@@ -101,8 +101,7 @@ class NaverMethodCallHandler : MethodCallHandler {
 
     constructor(context: Context) {
         this.context = context
-        initSDK(context)
-
+//        initSDK(context)
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
