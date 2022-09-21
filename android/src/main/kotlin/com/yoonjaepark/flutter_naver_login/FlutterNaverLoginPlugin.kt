@@ -13,6 +13,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.PluginRegistry.Registrar
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -22,14 +23,15 @@ import java.net.URL
 import java.util.concurrent.ExecutionException
 
 /** FlutterNaverLoginPlugin */
-class FlutterNaverLoginPlugin : FlutterPlugin {
+class FlutterNaverLoginPlugin : FlutterPlugin,ActivityAware {
     private lateinit var channel: MethodChannel
-
+    private lateinit var methodCallHandler: NaverMethodCallHandler;
     companion object {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "flutter_naver_login")
-            channel.setMethodCallHandler(NaverMethodCallHandler(registrar.context()))
+            var methodCallHandler=NaverMethodCallHandler(registrar.context())
+            channel.setMethodCallHandler(methodCallHandler)
         }
     }
 
@@ -38,22 +40,21 @@ class FlutterNaverLoginPlugin : FlutterPlugin {
             flutterPluginBinding.getFlutterEngine().getDartExecutor(),
             "flutter_naver_login"
         )
-        this.channel.setMethodCallHandler(NaverMethodCallHandler(flutterPluginBinding.applicationContext))
+        this.methodCallHandler = NaverMethodCallHandler(flutterPluginBinding.applicationContext)
+        this.channel.setMethodCallHandler(methodCallHandler)
     }
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         this.channel.setMethodCallHandler(null)
     }
-
-    // This static function is optional and equivalent to onAttachedToEngine. It supports the old
-    // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-    // plugin registration via this function while apps migrate to use the new Android APIs
-    // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
-    //
-    // It is encouraged to share logic between onAttachedToEngine and registerWith to keep
-    // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
-    // depending on the user's project. onAttachedToEngine or registerWith must both be defined
-    // in the same class.
+    override fun onDetachedFromActivity() {}
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        onAttachedToActivity(binding)
+    }
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        this.methodCallHandler.setContext(binding.getActivity())
+    }
+    override fun onDetachedFromActivityForConfigChanges() {}
 }
 
 class NaverMethodCallHandler : MethodCallHandler {
@@ -70,7 +71,7 @@ class NaverMethodCallHandler : MethodCallHandler {
     private val METHOD_GET_TOKEN = "getCurrentAccessToken"
     private val METHOD_REFRESH_ACCESS_TOKEN_WITH_REFRESH_TOKEN =
         "refreshAccessTokenWithRefreshToken"
-    private val context: Context
+    private lateinit var mContext: Context
     private fun initSDK(context: Context) {
         if (NaverIdLoginSDK.getState() != NidOAuthLoginState.NEED_INIT) {
             var packageName = context.packageName
@@ -100,10 +101,11 @@ class NaverMethodCallHandler : MethodCallHandler {
     }
 
     constructor(context: Context) {
-        this.context = context
 //        initSDK(context)
     }
-
+    fun setContext(context: Context){
+        this.mContext = context;
+    }
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         if (call.method == METHOD_LOG_IN) {
             this.login(result)
@@ -189,7 +191,7 @@ class NaverMethodCallHandler : MethodCallHandler {
                 onFailure(errorCode, message)
             }
         }
-        NaverIdLoginSDK.authenticate(this.context, mOAuthLoginHandler)
+        NaverIdLoginSDK.authenticate(this.mContext, mOAuthLoginHandler)
     }
 
     fun logout(result: MethodChannel.Result) {
@@ -227,7 +229,7 @@ class NaverMethodCallHandler : MethodCallHandler {
         }
 
         NidOAuthLogin().callDeleteTokenApi(
-            this.context,
+            this.mContext,
             mOAuthLoginHandler
         )
     }
@@ -249,7 +251,7 @@ class NaverMethodCallHandler : MethodCallHandler {
             }
         }
         NidOAuthLogin().callRefreshAccessTokenApi(
-            this.context,
+            this.mContext,
             mOAuthLoginHnadler
         )
     }
