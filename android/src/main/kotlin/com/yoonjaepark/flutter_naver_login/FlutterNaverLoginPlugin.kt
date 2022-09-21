@@ -69,7 +69,7 @@ class NaverMethodCallHandler : MethodCallHandler {
         private var OAUTH_CLIENT_NAME = "OAUTH_CLIENT_NAME"
 
         @JvmStatic fun initSDK(context: Context){
-            if (NaverIdLoginSDK.getState() != NidOAuthLoginState.NEED_INIT) {
+            if (NaverIdLoginSDK.getState() == NidOAuthLoginState.NEED_INIT) {
                 var packageName = context.packageName
                 packageName.let {
                     var applicationInfo =
