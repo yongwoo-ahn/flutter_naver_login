@@ -105,7 +105,7 @@ class NaverMethodCallHandler : MethodCallHandler {
 
     }
 
-    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+    override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         if (call.method == METHOD_LOG_IN) {
             this.login(result)
         } else if (call.method == METHOD_LOG_OUT) {
@@ -134,7 +134,7 @@ class NaverMethodCallHandler : MethodCallHandler {
     }
 
 
-    fun currentAccount(result: Result) {
+    fun currentAccount(result: MethodChannel.Result) {
         val accessToken = NaverIdLoginSDK.getAccessToken()
         if (accessToken == null) {
             val errorCode = NaverIdLoginSDK.getLastErrorCode().code
@@ -161,7 +161,7 @@ class NaverMethodCallHandler : MethodCallHandler {
         }
     }
 
-    fun errorResponse(result: Result, status: String, description: String?) {
+    fun errorResponse(result: MethodChannel.Result, status: String, description: String?) {
         var descriptionString = description
         if (description == null) {
             descriptionString = "NULL"
@@ -174,7 +174,7 @@ class NaverMethodCallHandler : MethodCallHandler {
         })
     }
 
-    private fun login(result: Result) {
+    private fun login(result: MethodChannel.Result) {
         val mOAuthLoginHandler = object : OAuthLoginCallback {
             override fun onSuccess() {
                 currentAccount(result)
@@ -193,7 +193,7 @@ class NaverMethodCallHandler : MethodCallHandler {
         NaverIdLoginSDK.authenticate(this.context, mOAuthLoginHandler)
     }
 
-    fun logout(result: Result) {
+    fun logout(result: MethodChannel.Result) {
         NaverIdLoginSDK.logout()
         result.success(object : HashMap<String, Any>() {
             init {
@@ -203,7 +203,7 @@ class NaverMethodCallHandler : MethodCallHandler {
         })
     }
 
-    fun logoutAndDeleteToken(result: Result) {
+    fun logoutAndDeleteToken(result: MethodChannel.Result) {
         val mOAuthLoginHandler = object : OAuthLoginCallback {
             override fun onSuccess() {
                 result.success(object : HashMap<String, Any>() {
@@ -233,7 +233,7 @@ class NaverMethodCallHandler : MethodCallHandler {
         )
     }
 
-    fun refreshAccessTokenWithRefreshToken(result: Result) {
+    fun refreshAccessTokenWithRefreshToken(result: MethodChannel.Result) {
         val mOAuthLoginHnadler = object : OAuthLoginCallback {
             override fun onSuccess() {
                 result.success(true)
