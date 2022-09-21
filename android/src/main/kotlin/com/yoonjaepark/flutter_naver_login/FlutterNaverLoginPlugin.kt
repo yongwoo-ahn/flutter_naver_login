@@ -32,6 +32,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin,ActivityAware {
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "flutter_naver_login")
             var methodCallHandler=NaverMethodCallHandler()
+            NaverMethodCallHandler.initSDK(registrar.context())
             methodCallHandler.setContext(registrar.context())
             channel.setMethodCallHandler(methodCallHandler)
         }
@@ -42,6 +43,7 @@ class FlutterNaverLoginPlugin : FlutterPlugin,ActivityAware {
             flutterPluginBinding.getFlutterEngine().getDartExecutor(),
             "flutter_naver_login"
         )
+        NaverMethodCallHandler.initSDK(flutterPluginBinding.getApplicationContext())
         this.methodCallHandler = NaverMethodCallHandler()
         this.methodCallHandler.setContext(flutterPluginBinding.getApplicationContext())
         this.channel.setMethodCallHandler(methodCallHandler)
