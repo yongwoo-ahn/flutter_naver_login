@@ -244,11 +244,11 @@ class NaverMethodCallHandler : MethodCallHandler {
     }
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: MethodChannel.Result) {
         if (call.method == METHOD_LOG_IN) {
-            NaverMethodCallHandler.login(this.context,result)
+            NaverMethodCallHandler.login(this.context!!,result)
         } else if (call.method == METHOD_LOG_OUT) {
             NaverMethodCallHandler.logout(result)
         } else if (call.method == METHOD_LOG_OUT_DELETE_TOKEN) {
-            NaverMethodCallHandler.logoutAndDeleteToken(this.context,result)
+            NaverMethodCallHandler.logoutAndDeleteToken(this.context!!,result)
         } else if (call.method == METHOD_GET_TOKEN) {
             result.success(object : HashMap<String, String>() {
                 init {
@@ -263,7 +263,7 @@ class NaverMethodCallHandler : MethodCallHandler {
             NaverMethodCallHandler.currentAccount(result)
         } else if (call.method == METHOD_REFRESH_ACCESS_TOKEN_WITH_REFRESH_TOKEN) {
             NaverMethodCallHandler.refreshAccessTokenWithRefreshToken(
-                this.context
+                this.context!!,
                 result
             )
         } else {
