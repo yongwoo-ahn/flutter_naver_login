@@ -72,7 +72,7 @@ class NaverMethodCallHandler : MethodCallHandler {
     private val METHOD_GET_TOKEN = "getCurrentAccessToken"
     private val METHOD_REFRESH_ACCESS_TOKEN_WITH_REFRESH_TOKEN =
         "refreshAccessTokenWithRefreshToken"
-    private lateinit var mContext: Context
+    private var mContext: Context
     private fun initSDK(context: Context) {
         if (NaverIdLoginSDK.getState() != NidOAuthLoginState.NEED_INIT) {
             var packageName = context.packageName
